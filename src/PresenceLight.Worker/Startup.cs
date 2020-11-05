@@ -44,6 +44,11 @@ namespace PresenceLight.Worker
             {
                 options.ResponseType = "id_token code";
                 options.Authority = $"{Configuration["Instance"]}common/v2.0";
+
+                var cookieDomain = Configuration["CookieDomain"];
+                if (!string.IsNullOrEmpty(cookieDomain))
+                    options.CorrelationCookie.Domain = cookieDomain;
+                
                 options.Scope.Add("offline_access");
                 options.Scope.Add("User.Read");
 
