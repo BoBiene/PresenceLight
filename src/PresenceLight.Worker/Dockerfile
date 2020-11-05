@@ -2,8 +2,8 @@
 
 FROM mcr.microsoft.com/dotnet/aspnet:5.0-buster-slim AS base
 WORKDIR /app
-EXPOSE 80
-EXPOSE 443
+EXPOSE 5000
+EXPOSE 5001
 
 FROM mcr.microsoft.com/dotnet/sdk:5.0-buster-slim AS build
 WORKDIR /src
@@ -15,7 +15,7 @@ WORKDIR "/src/PresenceLight.Worker"
 RUN dotnet build "PresenceLight.Worker.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "PresenceLight.Worker.csproj" -c Release -o /app/publish
+RUN dotnet publish "PresenceLight.Worker.csproj" -c Release -o /app/publish -p:PublishProfile=Docker
 
 FROM base AS final
 WORKDIR /app
