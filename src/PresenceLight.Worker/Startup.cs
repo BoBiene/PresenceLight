@@ -47,7 +47,11 @@ namespace PresenceLight.Worker
 
                 var cookieDomain = Configuration["CookieDomain"];
                 if (!string.IsNullOrEmpty(cookieDomain))
+                {
                     options.CorrelationCookie.Domain = cookieDomain;
+                    options.CorrelationCookie.SecurePolicy = Microsoft.AspNetCore.Http.CookieSecurePolicy.Always;
+                }
+                else { }
                 
                 options.Scope.Add("offline_access");
                 options.Scope.Add("User.Read");
