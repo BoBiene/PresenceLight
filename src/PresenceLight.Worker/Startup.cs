@@ -54,14 +54,14 @@ namespace PresenceLight.Worker
                     ValidateIssuer = false
                 };
                 
-                options. Notifications = new OpenIdConnectAuthenticationNotifications
+                options.Notifications = new OpenIdConnectAuthenticationNotifications
                 {
                     SecurityTokenValidated = notification =>
                     {
                         notification.AuthenticationTicket.Properties.RedirectUri = RewriteToPublicOrigin(notification.AuthenticationTicket.Properties.RedirectUri);
                         return Task.CompletedTask;
                     }
-                }
+                };
 
                 // Hook into the OpenID events to wire up MSAL
                 options.Events = new OpenIdConnectEvents
