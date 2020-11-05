@@ -50,8 +50,12 @@ namespace PresenceLight.Worker
                 {
                     options.CorrelationCookie.Domain = cookieDomain;
                     options.CorrelationCookie.SecurePolicy = Microsoft.AspNetCore.Http.CookieSecurePolicy.Always;
+                    options.NonceCookie.Domain = cookieDomain;
+                    options.NonceCookie.SecurePolicy = Microsoft.AspNetCore.Http.CookieSecurePolicy.Always;
                 }
                 else { }
+
+                
                 
                 options.Scope.Add("offline_access");
                 options.Scope.Add("User.Read");
@@ -73,6 +77,7 @@ namespace PresenceLight.Worker
                     },
                     OnAuthenticationFailed = context =>
                     {
+                        Console.WriteLine($"Authentication failed: {context.Exception}");
                         context.Response.Redirect("/Error");
                         context.HandleResponse();
                         return Task.FromResult(0);
