@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using Blazorise;
 using Blazorise.Bootstrap;
 using Blazorise.Icons.FontAwesome;
+using Microsoft.AspNetCore.HttpOverrides;
 
 namespace PresenceLight.Worker
 {
