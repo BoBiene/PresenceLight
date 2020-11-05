@@ -53,6 +53,15 @@ namespace PresenceLight.Worker
                     NameClaimType = "name",
                     ValidateIssuer = false
                 };
+                
+                options. Notifications = new OpenIdConnectAuthenticationNotifications
+                {
+                    SecurityTokenValidated = notification =>
+                    {
+                        notification.AuthenticationTicket.Properties.RedirectUri = RewriteToPublicOrigin(notification.AuthenticationTicket.Properties.RedirectUri);
+                        return Task.CompletedTask;
+                    }
+                }
 
                 // Hook into the OpenID events to wire up MSAL
                 options.Events = new OpenIdConnectEvents
@@ -110,6 +119,24 @@ namespace PresenceLight.Worker
             services.AddSingleton<AppState, AppState>();
             services.AddBlazoredModal();
             services.AddHostedService<Worker>();
+        }
+        
+        private static string RewriteToPublicOrigin(string originalUrl)
+        {
+            var publicOrigin = ConfigurationManager.AppSettings["app:RedirectUri"];
+            if (!string.IsNullOrEmpty(publicOrigin))
+            {
+                var uriBuilder = new UriBuilder(originalUrl);
+                var publicOriginUri = new Uri(publicOrigin);
+                uriBuilder.Host = publicOriginUri.Host;
+                uriBuilder.Scheme = publicOriginUri.Scheme;
+                uriBuilder.Port = publicOriginUri.Port;
+                var newUrl = uriBuilder.Uri.AbsoluteUri;
+
+                return newUrl;
+            }
+
+            return originalUrl;
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
