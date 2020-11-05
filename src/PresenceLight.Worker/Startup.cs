@@ -114,6 +114,9 @@ namespace PresenceLight.Worker
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            var config = new ConfigWrapper();
+            Configuration.Bind(config);
+            
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -129,7 +132,12 @@ namespace PresenceLight.Worker
             app.UseStaticFiles();
 
             app.UseRouting();
-
+            
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            });
+            
             app.UseAuthentication();
             app.UseAuthorization();
 
